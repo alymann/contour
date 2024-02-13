@@ -273,11 +273,15 @@ bool ContourGuiApp::loadConfig(string const& target)
 
 int ContourGuiApp::fontConfigAction()
 {
+    bool worked = true;
     if (!loadConfig("font-locator"))
-        return EXIT_FAILURE;
+        worked = false
 
     vtrasterizer::FontDescriptions const& fonts = _config.profile(_config.defaultProfileName)->fonts;
     text::font_description const& fontDescription = fonts.regular;
+    if (!worked) {
+        fonts.fontLocator = FontLocatorEngine::Mock;
+    }
     text::font_locator& fontLocator = createFontLocator(fonts.fontLocator);
     text::font_source_list const fontSources = fontLocator.locate(fontDescription);
 
